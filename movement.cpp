@@ -42,6 +42,7 @@ void ps3_fetch(void){
 }
 
 void kineval(void){
+  ps3_fetch();
   M1 = lambda * (  rx + ly + lx );
   M2 = lambda * ( rx + ly + (-1.0 * lx) );
   M3 = lambda * ( ( -1.0 * rx ) + ly + ( -1.0 * lx ) );
@@ -111,4 +112,5 @@ void ps3_init(void){
   Ps3.begin(MACADDR);
 
 }
+
 
