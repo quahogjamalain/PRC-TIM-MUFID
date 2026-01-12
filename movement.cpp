@@ -40,12 +40,13 @@ void kineval(void){
   M2 = lambda * ( rx + ly + (-1.0 * lx) );
   M3 = lambda * ( ( -1.0 * rx ) + ly + ( -1.0 * lx ) );
   M4 = lambda * ( ( -1.0 * rx ) + ly + lx );
-  M1 = map(M1, -432, 418, -1023, 1023);
-  M2 = map(M2, -425, 425, -1023, 1023);
-  M3 = map(M3, -426, 428, -1023, 1023);
-  M4 = map(M4, -427, 420, -1023, 1023);
+  // M1 = map(M1, -432, 418, -1023, 1023);
+  // M2 = map(M2, -425, 425, -1023, 1023);
+  // M3 = map(M3, -426, 428, -1023, 1023);
+  // M4 = map(M4, -427, 420, -1023, 1023);
   // Serial.printf("M1 raw : %d | M2 raw : %d | M3 raw : %d | M4 raw : %d\n", M1, M2, M3, M4);
-  // Serial.printf("M1 cooked : %d | M2 cooked : %d | M3 cooked : %d | M4 cooked : %d\n", M1, M2, M3, M4);
+  Serial.printf("M1 cooked : %d | M2 cooked : %d | M3 cooked : %d | M4 cooked : %d\n\
+    lx : %d | ly : %d | rx : %d\n", M1, M2, M3, M4, lx, ly, rx);
 }
 
 void motormov(void){
@@ -100,5 +101,7 @@ void motormov(void){
 }
 
 void ps3_init(void){
+  Serial.begin(115200);
   Ps3.begin(MACADDR);
+
 }
