@@ -31,11 +31,17 @@ void inisialisasi_motor(void){
   ledcWrite(M4B, 0);
 }
 
-void kineval(void){
+void ps3_fetch(void){
   ly = Ps3.data.analog.stick.ly * -1;
   lx = Ps3.data.analog.stick.lx;
   rx = Ps3.data.analog.stick.rx * theta;
 
+  if(abs(ly) <= deadzone) ly = 0; // Saat nilai ga sampe threshold maka diwrite 0, biar ga drift
+  if(abs(lx) <= deadzone) lx = 0;
+  if(abs(rx) <= deadzone) rx = 0;
+}
+
+void kineval(void){
   M1 = lambda * (  rx + ly + lx );
   M2 = lambda * ( rx + ly + (-1.0 * lx) );
   M3 = lambda * ( ( -1.0 * rx ) + ly + ( -1.0 * lx ) );
@@ -105,3 +111,4 @@ void ps3_init(void){
   Ps3.begin(MACADDR);
 
 }
+
