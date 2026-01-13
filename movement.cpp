@@ -1,5 +1,7 @@
 #include <Ps3Controller.h>
+#include <math.h>
 #include "pindef.h"
+#include "fsm.h"
 #include "movement.h"
 
 int16_t ly;
@@ -10,6 +12,8 @@ int32_t M1;
 int32_t M2;
 int32_t M3;
 int32_t M4;
+
+static fsm_state_quadrant_t current_state = IDLE;
 
 void inisialisasi_motor(void){
   ledcAttachChannel(M1A, FREQ, RES, 15);
@@ -39,19 +43,51 @@ void ps3_fetch(void){
   if(abs(ly) <= deadzone) ly = 0; // Saat nilai ga sampe threshold maka diwrite 0, biar ga drift
   if(abs(lx) <= deadzone) lx = 0;
   if(abs(rx) <= deadzone) rx = 0;
+
+  switch(current_state){
+    case IDLE:
+      if(isQuadrant1()) current_state = QUADRANT_1;
+      else if(isQuadrant2()) current_state = QUADRANT_2;
+      else if(isQuadrant3()) current_state = QUADRANT_3;
+      else if(isQuadrant4()) current_state = QUADRANT_4;
+      else current_state = IDLE;
+      break;
+  }
 }
 
 void kineval(void){
   ps3_fetch();
+
+  switch(current_state){
+    case QUADRANT_1:
+      M1 = lambda * (  rx + sqrt( (ly + lx)^2 ) );
+      M2 = lambda * ( rx + sqrt( ( ly + (-1*lx) )^2 ) );
+      M3 = lambda * ( ( -1.0*rx ) + ly + ( -1*lx ) );
+      M4 = lambda * ( ( -1.0*rx ) + ly + lx );
+      current_state = IDLE;
+      break;
+    
+    case QUADRANT_1:
+
+      current_state = IDLE;
+      break;
+    
+    case QUADRANT_1:
+
+      current_state = IDLE;
+      break;
+    
+    case QUADRANT_1:
+
+      current_state = IDLE;
+      break;
+  }
+  
   M1 = lambda * (  rx + ly + lx );
   M2 = lambda * ( rx + ly + (-1.0 * lx) );
   M3 = lambda * ( ( -1.0 * rx ) + ly + ( -1.0 * lx ) );
   M4 = lambda * ( ( -1.0 * rx ) + ly + lx );
-  // M1 = map(M1, -432, 418, -1023, 1023);
-  // M2 = map(M2, -425, 425, -1023, 1023);
-  // M3 = map(M3, -426, 428, -1023, 1023);
-  // M4 = map(M4, -427, 420, -1023, 1023);
-  // Serial.printf("M1 raw : %d | M2 raw : %d | M3 raw : %d | M4 raw : %d\n", M1, M2, M3, M4);
+  
   Serial.printf("M1 cooked : %d | M2 cooked : %d | M3 cooked : %d | M4 cooked : %d\n\
     lx : %d | ly : %d | rx : %d\n", M1, M2, M3, M4, lx, ly, rx);
 }
@@ -112,5 +148,6 @@ void ps3_init(void){
   Ps3.begin(MACADDR);
 
 }
+
 
 
