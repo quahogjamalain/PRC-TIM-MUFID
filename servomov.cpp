@@ -86,7 +86,7 @@ void fsm_timer_button(){
       if( !( count_r1 % 20) ) r1_timer = TIMER_OFF;
       break;
     case TIMER_OFF:
-      timerReset(handle_timer_r1); timerWrite(handle_timer_r1, 0); Serial.println("timer 2 detik sudah selesai!\nFitur aktif!\n");
+      timerRestart(handle_timer_r1); timerWrite(handle_timer_r1, 0); Serial.println("timer 2 detik sudah selesai!\nFitur aktif!\n");
       r1_timer = DORMANT;
       break;
   }
@@ -97,3 +97,4 @@ void servoloop(){
   fsm_check_l1();
   fsm_timer_button();
 }
+
